@@ -14,6 +14,47 @@ helm push myhelmchart.tgz oci://myharbor.mydomain.com/chartrepo/myproject
 #pull
 helm pull oci://container-registry.com/chartrepo/myproject --version 1.7.4
 
+#các biểu thức trong ngoặc nhọn file yaml
+
+#.Values chứa giá trị từ values.yaml hoặc --set truyền vào.
+replicas: {{ .Values.replicaCount }}
+#.Chart Chứa thông tin từ file Chart.yaml
+image: "{{ .Chart.Name }}:{{ .Chart.AppVersion }}"
+#include gọi một đoạn code đã định nghĩa trong _helpers.tpl. Tức là tái sử dụng code!
+{{ include "tên_hàm" . }}
+# _helpers.tpl
+{{- define "myapp.fullname" -}}
+{{ .Release.Name }}-{{ .Chart.Name }}
+{{- end }}
+# deployment.yaml
+metadata:
+  name: {{ include "myapp.fullname" . }}
+
+#.Release Thông tin về lần cài đặt Helm.
+.Release.Name	tên bản release (myapp, nginx,...)
+.Release.Namespace	namespace được cài vào
+.Release.Revision	số lần nâng cấp chart
+
+#range – Lặp
+env:
+{{- range $key, $value := .Values.env }}
+  - name: {{ $key }}
+    value: "{{ $value }}"
+{{- end }}
+
+#if, else if, else
+{{- if .Values.enabled }}
+  ...
+{{- else if .Values.debug }}
+  ...
+{{- else }}
+  ...
+{{- end }}
+
+#Biến nội bộ ($)
+{{- $name := .Chart.Name }}
+app: {{ $name }}
+
 
 
 
