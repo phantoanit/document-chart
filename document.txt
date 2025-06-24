@@ -1,0 +1,19 @@
+helm create template-shopnow
+helm install shopnow-fe ./template-shopnow -n shopnow -f template-shopnow/values.yaml
+helm uninstall shopnow-fe -n shopnow
+
+#dong goi
+helm package ./template-shopnow
+
+#cai dat plugin de push registry
+helm plugin install https://github.com/chartmuseum/helm-push
+#login registry
+helm registry login myharbor.mydomain.com #/chartrepo/myproject
+#push to registry
+helm push myhelmchart.tgz oci://myharbor.mydomain.com/chartrepo/myproject
+#pull
+helm pull oci://container-registry.com/chartrepo/myproject --version 1.7.4
+
+
+
+
