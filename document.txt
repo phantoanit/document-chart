@@ -1,4 +1,5 @@
 helm create template-shopnow
+kubectl create namespace shopnow
 helm install shopnow-fe ./template-shopnow -n shopnow -f template-shopnow/values.yaml
 helm uninstall shopnow-fe -n shopnow
 
