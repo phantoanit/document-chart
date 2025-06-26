@@ -56,6 +56,7 @@ env:
 {{- $name := .Chart.Name }}
 app: {{ $name }}
 
-
+#kiem tra hien thi yaml toan bo
+helm template ./mychart | kubectl apply --dry-run=client -f -
 
 
