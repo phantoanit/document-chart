@@ -19,6 +19,21 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.service.targetPort }}
+ 
+          {{- if .Values.image.env }}
+          env:
+            {{- range $key, $value := .Values.image.env }}
+            - name: {{ $key }}
+              value: "{{ $value }}"
+            {{- end }}
+          {{- end }}
+
+          {{- if .Values.global.enabledComponents.secret}}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.global.appName}}-secret
+          {{- end }}         
+ 
           {{- if .Values.global.enabledComponents.configmap }}
           volumeMounts:
             - name: config-volume
